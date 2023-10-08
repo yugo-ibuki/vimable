@@ -23,6 +23,9 @@ func Execute() {
 
 	fmt.Println("tableWidth", tableWidth)
 
+	// style
+	style := pkg.NewStyle(tableWidth)
+
 	headerCells := []string{}
 	for _, val := range header {
 		headerCells = append(headerCells, style.HeaderStyle().Render(val))
