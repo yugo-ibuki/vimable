@@ -2,6 +2,12 @@ package pkg
 
 import "github.com/charmbracelet/lipgloss"
 
+const (
+	Green = lipgloss.Color("#00FF00")
+	Cyan  = lipgloss.Color("#00FFFF")
+	Pink  = lipgloss.Color("#FF69B4")
+)
+
 type Style struct {
 	Width int
 }
@@ -14,7 +20,7 @@ func NewStyle(width int) Style {
 
 func (s *Style) HeaderStyle() lipgloss.Style {
 	style := lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#00FF00")). // green
+		Foreground(Green). // green
 		Border(lipgloss.NormalBorder()).
 		Bold(true).
 		Width(s.Width)
@@ -23,7 +29,8 @@ func (s *Style) HeaderStyle() lipgloss.Style {
 
 func (s *Style) TableTitleStyle() lipgloss.Style {
 	style := lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#00FFFF")). // cyan
+		Foreground(Cyan). // cyan
+		Border(lipgloss.NormalBorder()).
 		Bold(true).
 		Width(s.Width)
 	return style
@@ -31,7 +38,8 @@ func (s *Style) TableTitleStyle() lipgloss.Style {
 
 func (s *Style) TableCellStyle() lipgloss.Style {
 	style := lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#FF69B4")). // hot pink
+		Foreground(Pink). // hot pink
+		Border(lipgloss.NormalBorder()).
 		Bold(true).
 		Width(s.Width)
 	return style

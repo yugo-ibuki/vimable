@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"
 	"github.com/yugo-ibuki/vimable/pkg"
 	"os"
@@ -30,7 +31,23 @@ func Execute() {
 	for _, val := range header {
 		headerCells = append(headerCells, style.HeaderStyle().Render(val))
 	}
-	fmt.Println(strings.Join(headerCells, " "))
+	joined := strings.Join(headerCells, " ")
+
+	// データを表示
+	for key, datums := range data {
+		for _, datum := range datums {
+			row := []string{
+				style.TableCellStyle().Render(key),
+				style.TableCellStyle().Render(datum.Command),
+				style.TableCellStyle().Render(datum.Content),
+				style.TableCellStyle().Render(datum.Description),
+			}
+			fmt.Println(strings.Join(row, " "))
+		}
+	}
+
+	fmt.Println(lipgloss.JoinHorizontal(0.2, joined))
+
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Print("error occurs...: ", err)
 		os.Exit(1)
