@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"github.com/yugo-ibuki/vimable/data"
 	"github.com/yugo-ibuki/vimable/pkg"
 	"os"
 	"strings"
@@ -15,15 +14,12 @@ var rootCmd = &cobra.Command{
 }
 
 func Execute() {
-	table := data.Commands()
-	header := data.Header()
-
-	// style
-	style := pkg.NewStyle()
+	header := pkg.Header()
+	data := pkg.Commands()
 
 	// table width
 	tableInstance := pkg.NewTable()
-	tableWidth := tableInstance.Width(header, table)
+	tableWidth := tableInstance.Width(header, data)
 
 	fmt.Println("tableWidth", tableWidth)
 
