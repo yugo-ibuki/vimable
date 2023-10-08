@@ -1,15 +1,15 @@
-package data
+package pkg
 
-type Data struct {
+type Datum struct {
 	Command     string
 	Content     string
 	Description string
 }
 
-type Table map[string][]Data
+type Data map[string][]Datum
 
-func Commands() Table {
-	return Table{
+func Commands() Data {
+	return Data{
 		"vimrc": {
 			{Command: "key1/title1", Content: "key1/content1", Description: "key1/description1"},
 			{Command: "key1/title2", Content: "key1/content2", Description: "key1/description2"},

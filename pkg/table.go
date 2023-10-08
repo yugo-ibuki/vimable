@@ -3,22 +3,20 @@ package pkg
 import (
 	"fmt"
 	"github.com/samber/lo"
-	"github.com/yugo-ibuki/vimable/data"
 )
 
-type Table struct {
-}
+type Table struct{}
 
 func NewTable() Table {
 	return Table{}
 }
 
 // Width - returns the maximum length of the table content.
-func (t *Table) Width(header []string, table data.Table) int {
+func (t *Table) Width(header []string, data Data) int {
 	// header length
 	maxLength := headerMax(header)
 
-	for tableTitle, tableData := range table {
+	for tableTitle, tableData := range data {
 		//fmt.Println(tableTitleStyle.Render(tableTitle))
 		fmt.Println(tableTitle)
 
@@ -42,8 +40,8 @@ func headerMax(header []string) int {
 }
 
 // tableMax - returns the maximum length of the table content.
-func tableMax(tableData []data.Data) int {
-	dataValue := lo.Map(tableData, func(value data.Data, _ int) []int {
+func tableMax(tableData []Datum) int {
+	dataValue := lo.Map(tableData, func(value Datum, _ int) []int {
 		return []int{
 			len(value.Command),
 			len(value.Content),
