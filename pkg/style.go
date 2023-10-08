@@ -9,38 +9,30 @@ const (
 )
 
 type Style struct {
-	Width int
+	lipgloss lipgloss.Style
 }
 
 func NewStyle(width int) Style {
+	style := lipgloss.NewStyle().
+		Border(lipgloss.NormalBorder()).
+		Bold(true).
+		Width(width)
 	return Style{
-		Width: width,
+		lipgloss: style,
 	}
 }
 
 func (s *Style) HeaderStyle() lipgloss.Style {
-	style := lipgloss.NewStyle().
-		Foreground(Green). // green
-		Border(lipgloss.NormalBorder()).
-		Bold(true).
-		Width(s.Width)
-	return style
+	return s.lipgloss.
+		Foreground(Green) // green
 }
 
 func (s *Style) TableTitleStyle() lipgloss.Style {
-	style := lipgloss.NewStyle().
-		Foreground(Cyan). // cyan
-		Border(lipgloss.NormalBorder()).
-		Bold(true).
-		Width(s.Width)
-	return style
+	return s.lipgloss.
+		Foreground(Cyan) // cyan
 }
 
 func (s *Style) TableCellStyle() lipgloss.Style {
-	style := lipgloss.NewStyle().
-		Foreground(Pink). // hot pink
-		Border(lipgloss.NormalBorder()).
-		Bold(true).
-		Width(s.Width)
-	return style
+	return s.lipgloss.
+		Foreground(Pink) // hot pink
 }
