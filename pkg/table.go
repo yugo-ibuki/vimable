@@ -1,52 +1,77 @@
 package pkg
 
 import (
-	"fmt"
 	"github.com/samber/lo"
 )
 
 type Table struct{}
+
+type ContentMax struct {
+	Command     int
+	Content     int
+	Description int
+}
 
 func NewTable() Table {
 	return Table{}
 }
 
 // Width - returns the maximum length of the table content.
-func (t *Table) Width(header []string, data Data) int {
+func (t *Table) Width(header []string, data Data) ContentMax {
 	// header length
-	maxLength := headerMax(header)
+	headerMaxs := headerMax(header)
+	var contentMax ContentMax
+	for _, tableData := range data {
+		contentMaxs := tableMax(tableData)
+		if contentMaxs.Command > headerMaxs.Command {
+			contentMax.Command = contentMaxs.Command
+		} else {
+			contentMax.Command = headerMaxs.Command
+		}
 
-	for tableTitle, tableData := range data {
-		//fmt.Println(tableTitleStyle.Render(tableTitle))
-		fmt.Println(tableTitle)
+		if contentMaxs.Content > headerMaxs.Content {
+			contentMax.Content = contentMaxs.Content
+		} else {
+			contentMax.Content = headerMaxs.Content
+		}
 
-		//fmt.Println(tableCellStyle.Render(command.Command))
-		maxInData := tableMax(tableData)
-		if maxInData > maxLength {
-			maxLength = maxInData
+		if contentMaxs.Description > headerMaxs.Description {
+			contentMax.Description = contentMaxs.Description
+		} else {
+			contentMax.Description = headerMaxs.Description
 		}
 	}
 
-	return maxLength
+	return contentMax
 }
 
-// headerMax - returns the maximum length of the header.
-func headerMax(header []string) int {
-	headerWidths := make([]int, len(header))
-	for i, val := range header {
-		headerWidths[i] = len(val)
+// headerMax - returns each length of the header.
+func headerMax(headers []string) ContentMax {
+	headerWidths := make([]int, len(headers))
+	for i, header := range headers {
+		headerWidths[i] = len(header)
 	}
-	return lo.Max(headerWidths)
+	return ContentMax{
+		headerWidths[0],
+		headerWidths[1],
+		headerWidths[2],
+	}
 }
 
 // tableMax - returns the maximum length of the table content.
-func tableMax(tableData []Datum) int {
-	dataValue := lo.Map(tableData, func(value Datum, _ int) []int {
-		return []int{
-			len(value.Command),
-			len(value.Content),
-			len(value.Description),
-		}
+func tableMax(tableData []Datum) ContentMax {
+	commandLengths := lo.Map(tableData, func(value Datum, _ int) int {
+		return len(value.Command)
 	})
-	return lo.Max(lo.Flatten(dataValue))
+	contentLengths := lo.Map(tableData, func(value Datum, _ int) int {
+		return len(value.Content)
+	})
+	descriptionLengths := lo.Map(tableData, func(value Datum, _ int) int {
+		return len(value.Description)
+	})
+	return ContentMax{
+		lo.Max(commandLengths),
+		lo.Max(contentLengths),
+		lo.Max(descriptionLengths),
+	}
 }

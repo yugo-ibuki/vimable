@@ -2,11 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"
 	"github.com/yugo-ibuki/vimable/pkg"
 	"os"
-	"strings"
 )
 
 var rootCmd = &cobra.Command{
@@ -20,29 +18,28 @@ func Execute() {
 
 	// table width
 	tableInstance := pkg.NewTable()
-	tableWidth := tableInstance.Width(header, data)
+	widths := tableInstance.Width(header, data)
 
-	fmt.Println("tableWidth", tableWidth)
+	fmt.Println("tableWidth", widths)
 
 	// style
-	style := pkg.NewStyle(tableWidth)
+	style := pkg.NewStyle()
 
-	headerCells := []string{}
-	for _, val := range header {
-		headerCells = append(headerCells, style.HeaderStyle().Render(val))
-	}
-	joined := strings.Join(headerCells, " ")
-	fmt.Println(lipgloss.JoinHorizontal(0.2, joined))
+	fmt.Println(
+		style.TableTitleStyle(widths.Command).Render(header[0]),
+		style.TableTitleStyle(widths.Content).Render(header[1]),
+		style.TableTitleStyle(widths.Description).Render(header[2]),
+	)
 
+	fmt.Println()
 	// データを表示
 	for _, datums := range data {
 		for _, datum := range datums {
-			row := []string{
-				style.TableCellStyle().Render(datum.Command),
-				style.TableCellStyle().Render(datum.Content),
-				style.TableCellStyle().Render(datum.Description),
-			}
-			fmt.Println(strings.Join(row, " "))
+			fmt.Println(
+				style.TableCellStyle(widths.Command).Render(datum.Command),
+				style.TableCellStyle(widths.Content).Render(datum.Content),
+				style.TableCellStyle(widths.Description).Render(datum.Description),
+			)
 		}
 	}
 

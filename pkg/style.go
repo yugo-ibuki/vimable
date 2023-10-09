@@ -12,12 +12,11 @@ type Style struct {
 	lipgloss lipgloss.Style
 }
 
-func NewStyle(width int) Style {
+func NewStyle() Style {
 	style := lipgloss.NewStyle().
 		// this is just a default border, but the layout is slightly mispositioned
 		//Border(lipgloss.NormalBorder()).
-		Bold(true).
-		Width(width)
+		Bold(true).Padding(0, 1)
 	return Style{
 		lipgloss: style,
 	}
@@ -28,12 +27,14 @@ func (s *Style) HeaderStyle() lipgloss.Style {
 		Foreground(Green) // green
 }
 
-func (s *Style) TableTitleStyle() lipgloss.Style {
+func (s *Style) TableTitleStyle(width int) lipgloss.Style {
 	return s.lipgloss.
-		Foreground(Cyan) // cyan
+		Foreground(Cyan). // cyan
+		Width(width)
 }
 
-func (s *Style) TableCellStyle() lipgloss.Style {
+func (s *Style) TableCellStyle(width int) lipgloss.Style {
 	return s.lipgloss.
-		Foreground(Pink) // hot pink
+		Foreground(Pink). // hot pink
+		Width(width)
 }
