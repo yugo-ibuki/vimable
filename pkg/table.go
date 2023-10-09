@@ -1,7 +1,6 @@
 package pkg
 
 import (
-	"fmt"
 	"github.com/samber/lo"
 )
 
@@ -16,11 +15,7 @@ func (t *Table) Width(header []string, data Data) int {
 	// header length
 	maxLength := headerMax(header)
 
-	for tableTitle, tableData := range data {
-		//fmt.Println(tableTitleStyle.Render(tableTitle))
-		fmt.Println(tableTitle)
-
-		//fmt.Println(tableCellStyle.Render(command.Command))
+	for _, tableData := range data {
 		maxInData := tableMax(tableData)
 		if maxInData > maxLength {
 			maxLength = maxInData
