@@ -14,7 +14,8 @@ type Style struct {
 
 func NewStyle(width int) Style {
 	style := lipgloss.NewStyle().
-		Border(lipgloss.NormalBorder()).
+		// this is just a default border, but the layout is slightly mispositioned
+		//Border(lipgloss.NormalBorder()).
 		Bold(true).
 		Width(width)
 	return Style{
