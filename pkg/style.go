@@ -3,9 +3,10 @@ package pkg
 import "github.com/charmbracelet/lipgloss"
 
 const (
-	Green = lipgloss.Color("#00FF00")
-	Cyan  = lipgloss.Color("#00FFFF")
-	Pink  = lipgloss.Color("#FF69B4")
+	Green     = lipgloss.Color("#00FF00")
+	Cyan      = lipgloss.Color("#00FFFF")
+	Pink      = lipgloss.Color("#FF69B4")
+	LightBlue = lipgloss.Color("#ADD8E6")
 )
 
 type Style struct {
@@ -23,17 +24,22 @@ func NewStyle(width int) Style {
 	}
 }
 
+func (s *Style) ModeStyle() lipgloss.Style {
+	return s.lipgloss.
+		Foreground(LightBlue)
+}
+
 func (s *Style) HeaderStyle() lipgloss.Style {
 	return s.lipgloss.
-		Foreground(Green) // green
+		Foreground(Green)
 }
 
 func (s *Style) TableTitleStyle() lipgloss.Style {
 	return s.lipgloss.
-		Foreground(Cyan) // cyan
+		Foreground(Cyan)
 }
 
 func (s *Style) TableCellStyle() lipgloss.Style {
 	return s.lipgloss.
-		Foreground(Pink) // hot pink
+		Foreground(Pink)
 }

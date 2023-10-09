@@ -27,15 +27,20 @@ func Execute() {
 	// style
 	style := pkg.NewStyle(tableWidth)
 
-	headerCells := []string{}
-	for _, val := range header {
-		headerCells = append(headerCells, style.HeaderStyle().Render(val))
-	}
-	joined := strings.Join(headerCells, " ")
-	fmt.Println(lipgloss.JoinHorizontal(0.2, joined))
+	// display content
+	for key, datums := range data {
+		fmt.Println()
+		fmt.Println(style.ModeStyle().Render(key))
 
-	// データを表示
-	for _, datums := range data {
+		// display header
+		headerCells := []string{}
+		for _, val := range header {
+			headerCells = append(headerCells, style.HeaderStyle().Render(val))
+		}
+		joined := strings.Join(headerCells, " ")
+		fmt.Println(lipgloss.JoinHorizontal(0.2, joined))
+
+		// display data
 		for _, datum := range datums {
 			row := []string{
 				style.TableCellStyle().Render(datum.Command),
