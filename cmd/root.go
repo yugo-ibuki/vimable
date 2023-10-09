@@ -32,12 +32,12 @@ func Execute() {
 		headerCells = append(headerCells, style.HeaderStyle().Render(val))
 	}
 	joined := strings.Join(headerCells, " ")
+	fmt.Println(lipgloss.JoinHorizontal(0.2, joined))
 
 	// データを表示
-	for key, datums := range data {
+	for _, datums := range data {
 		for _, datum := range datums {
 			row := []string{
-				style.TableCellStyle().Render(key),
 				style.TableCellStyle().Render(datum.Command),
 				style.TableCellStyle().Render(datum.Content),
 				style.TableCellStyle().Render(datum.Description),
@@ -45,8 +45,6 @@ func Execute() {
 			fmt.Println(strings.Join(row, " "))
 		}
 	}
-
-	fmt.Println(lipgloss.JoinHorizontal(0.2, joined))
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Print("error occurs...: ", err)
