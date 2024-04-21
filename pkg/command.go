@@ -17,12 +17,17 @@ func Commands() Data {
 			{Command: "f", Content: "同じ行から文字を探す(次のもの)", Description: ""},
 			{Command: "F", Content: "同じ行から文字を探す(前のもの)", Description: ""},
 			{Command: ";", Content: "次の検索結果にいく", Description: ""},
-			{Command: ",", Content: "前の検索結果にいく", Description: ""},
+			{Command: ",", Content: "前の検索結果にいく", Description: "カスタムしているので現在は使えない"},
 			{Command: "t", Content: "行末に向けて最初に見つかったもの", Description: ""},
 			{Command: "T", Content: "行頭に向けて最初に見つかったもの", Description: ""},
 		},
 		"コマンドモード": {
 			{Command: "/{word}", Content: "n で次へ進み、N で 1 つ前に戻る", Description: "検索を行う"},
+		},
+		"ビジュアルブロックモード": {
+			{Command: "ctrl-v -> I -> Esc", Content: "同じ箇所に同じ文字列を追加する", Description: ""},
+			{Command: "ctrl-a / ctrl-x", Content: "数字のインクリメント/デクリメント", Description: ""},
+			{Command: "g<ctrl-a> / g<ctrl-x>", Content: "数字の「連番で」インクリメント/デクリメント", Description: ""},
 		},
 		"ファイル一覧": {
 			{Command: "-", Content: "一つ上のディレクトリに移動", Description: ""},
