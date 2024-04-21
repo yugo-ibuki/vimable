@@ -15,6 +15,6 @@ $ vimable
 
 ## sample image
 
-![sample image](./images/sample.png)
+![sample image](./imgs/sample.png)
 
 
