@@ -28,6 +28,9 @@ func Commands() Data {
 			{Command: "gi", Content: "最後にinsertモードを終了した場所に戻ってinsertモードに切り替える", Description: ""},
 			{Command: "ctrl + f", Content: "次へページ送り", Description: ""},
 			{Command: "ctrl + b", Content: "前へページ送り", Description: ""},
+			{Command: "zz", Content: "カーソル部が真ん中にいくように調整", Description: ""},
+			{Command: "zt", Content: "カーソル部が上にいくように調整", Description: ""},
+			{Command: "zb", Content: "カーソル部が下にいくように調整", Description: ""},
 		},
 		"コマンドモード": {
 			{Command: "/{word}", Content: "n で次へ進み、N で 1 つ前に戻る", Description: "検索を行う"},
