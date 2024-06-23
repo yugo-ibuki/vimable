@@ -34,6 +34,7 @@ func Commands() Data {
 			{Command: "ctrl-v -> I -> Esc", Content: "同じ箇所に同じ文字列を追加する", Description: ""},
 			{Command: "ctrl-a / ctrl-x", Content: "数字のインクリメント/デクリメント", Description: ""},
 			{Command: "g<ctrl-a> / g<ctrl-x>", Content: "数字の「連番で」インクリメント/デクリメント", Description: ""},
+			{Command: "o", Content: "反対方向にブロックを伸ばすことができる", Description: ""},
 		},
 		"ファイル一覧": {
 			{Command: "-", Content: "一つ上のディレクトリに移動", Description: ""},
