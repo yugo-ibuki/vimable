@@ -31,6 +31,8 @@ func Commands() Data {
 			{Command: "zz", Content: "カーソル部が真ん中にいくように調整", Description: ""},
 			{Command: "zt", Content: "カーソル部が上にいくように調整", Description: ""},
 			{Command: "zb", Content: "カーソル部が下にいくように調整", Description: ""},
+			{Command: "m{任意のキー}", Content: "任意のキーにマークをつけることができる", Description: ""},
+			{Command: "`{任意のキー}", Content: "マークの位置に飛ぶことができる", Description: ""},
 		},
 		"コマンドモード": {
 			{Command: "/{word}", Content: "n で次へ進み、N で 1 つ前に戻る", Description: "検索を行う"},
