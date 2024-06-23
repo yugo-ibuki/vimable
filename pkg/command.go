@@ -34,6 +34,7 @@ func Commands() Data {
 			{Command: "m{任意のキー}", Content: "任意のキーにマークをつけることができる", Description: ""},
 			{Command: "`{任意のキー}", Content: "マークの位置に飛ぶことができる", Description: ""},
 			{Command: "ctrl + o", Content: "直前のジャンプ前の位置に戻る", Description: ""},
+			{Command: "ctrl + ]", Content: "呼び出し元にジャンプ/呼び出し先にジャンプ", Description: ""},
 		},
 		"コマンドモード": {
 			{Command: "/{word}", Content: "n で次へ進み、N で 1 つ前に戻る", Description: "検索を行う"},
