@@ -12,7 +12,7 @@ func Commands() Data {
 	return Data{
 		"ノーマルモード": {
 			{Command: "%", Content: "対照となるカッコ間を移動", Description: ""},
-			{Command: "ci\"", Content: "\t\"\" で囲われたワードを削除", Description: ""},
+			{Command: "ci\"", Content: "\t\"\" で囲われたワードを削除", Description: "iの部分はaでもいい。a: 両端を含む, i: 両端を含まない"},
 			{Command: "Shift + ^", Content: "行の先頭文字の頭まで移動", Description: ""},
 			{Command: "f", Content: "同じ行から文字を探す(次のもの)", Description: ""},
 			{Command: "F", Content: "同じ行から文字を探す(前のもの)", Description: ""},
@@ -20,6 +20,11 @@ func Commands() Data {
 			{Command: ",", Content: "前の検索結果にいく", Description: "カスタムしているので現在は使えない"},
 			{Command: "t", Content: "行末に向けて最初に見つかったもの", Description: ""},
 			{Command: "T", Content: "行頭に向けて最初に見つかったもの", Description: ""},
+			{Command: "{", Content: "次の文節に移動する", Description: "関数ごとなどで移動"},
+			{Command: "}", Content: "前の文節に移動する", Description: "関数ごとなどで移動"},
+			{Command: "'", Content: "前のマークの場所に移動", Description: ""},
+			{Command: "ct=", Content: "=までの範囲を削除する(=を含まない)", Description: ""},
+			{Command: "cf=", Content: "=までの範囲を削除する(=を含む)", Description: "const XXX = を return などに変えたい時に使う"},
 		},
 		"コマンドモード": {
 			{Command: "/{word}", Content: "n で次へ進み、N で 1 つ前に戻る", Description: "検索を行う"},
