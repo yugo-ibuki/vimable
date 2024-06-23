@@ -26,6 +26,7 @@ func Commands() Data {
 			{Command: "ct=", Content: "=までの範囲を削除する(=を含まない)", Description: ""},
 			{Command: "cf=", Content: "=までの範囲を削除する(=を含む)", Description: "const XXX = を return などに変えたい時に使う"},
 			{Command: "gi", Content: "最後にinsertモードを終了した場所に戻ってinsertモードに切り替える", Description: ""},
+			{Command: "ctrl + f", Content: "ページ送り", Description: ""},
 		},
 		"コマンドモード": {
 			{Command: "/{word}", Content: "n で次へ進み、N で 1 つ前に戻る", Description: "検索を行う"},
