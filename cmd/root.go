@@ -2,11 +2,11 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"
 	"github.com/yugo-ibuki/vimable/pkg"
-	"os"
-	"strings"
 )
 
 var rootCmd = &cobra.Command{
@@ -25,36 +25,36 @@ func run() {
 	header := pkg.Header()
 	data := pkg.Commands()
 
-	// table width
+	// Calculate optimal column widths
 	tableInstance := pkg.NewTable()
-	tableWidth := tableInstance.Width(header, data)
+	columnWidths := tableInstance.Width(header, data)
 
-	fmt.Println("tableWidth", tableWidth)
-
-	// style
-	style := pkg.NewStyle(tableWidth)
+	// Initialize styles with column widths
+	style := pkg.NewStyle(columnWidths)
 
 	// display content
 	for key, datums := range data {
-		fmt.Println()
+		if key != header[0] { // Add extra space only between sections
+			fmt.Println()
+		}
 		fmt.Println(style.ModeStyle().Render(key))
 
 		// display header
-		headerCells := []string{}
-		for _, val := range header {
-			headerCells = append(headerCells, style.HeaderStyle().Render(val))
+		headerCells := []string{
+			style.CommandStyle().Render(header[0]),
+			style.ContentStyle().Render(header[1]),
+			style.DescriptionStyle().Render(header[2]),
 		}
-		joined := strings.Join(headerCells, " ")
-		fmt.Println(lipgloss.JoinHorizontal(0.2, joined))
+		fmt.Println(lipgloss.JoinHorizontal(lipgloss.Left, headerCells...))
 
 		// display data
 		for _, datum := range datums {
 			row := []string{
-				style.TableCellStyle().Render(datum.Command),
-				style.TableCellStyle().Render(datum.Content),
-				style.TableCellStyle().Render(datum.Description),
+				style.CommandStyle().Render(datum.Command),
+				style.ContentStyle().Render(datum.Content),
+				style.DescriptionStyle().Render(datum.Description),
 			}
-			fmt.Println(strings.Join(row, " "))
+			fmt.Println(lipgloss.JoinHorizontal(lipgloss.Left, row...))
 		}
 	}
 
