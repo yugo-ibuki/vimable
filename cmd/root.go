@@ -33,11 +33,16 @@ func run() {
 	style := pkg.NewStyle(columnWidths)
 
 	// display content
+	isFirst := true
 	for key, datums := range data {
-		if key != header[0] { // Add extra space only between sections
-			fmt.Println()
+		if !isFirst {
+			fmt.Print("\n") // 最小限の改行
 		}
-		fmt.Println(style.ModeStyle().Render(key))
+		isFirst = false
+		
+		style.SetTitle(key) // タイトルを設定
+		fmt.Print(style.ModeStyle().Render(key))
+		fmt.Print("\n")
 
 		// display header
 		headerCells := []string{
@@ -45,7 +50,8 @@ func run() {
 			style.ContentStyle().Render(header[1]),
 			style.DescriptionStyle().Render(header[2]),
 		}
-		fmt.Println(lipgloss.JoinHorizontal(lipgloss.Left, headerCells...))
+		fmt.Print(lipgloss.JoinHorizontal(lipgloss.Left, headerCells...))
+		fmt.Print("\n")
 
 		// display data
 		for _, datum := range datums {
@@ -54,7 +60,8 @@ func run() {
 				style.ContentStyle().Render(datum.Content),
 				style.DescriptionStyle().Render(datum.Description),
 			}
-			fmt.Println(lipgloss.JoinHorizontal(lipgloss.Left, row...))
+			fmt.Print(lipgloss.JoinHorizontal(lipgloss.Left, row...))
+			fmt.Print("\n")
 		}
 	}
 
