@@ -113,15 +113,15 @@ func (s *Style) DescriptionStyle() lipgloss.Style {
 }
 
 func (s *Style) RenderCommand(text string) string {
-	return s.CommandStyle().Render(wrapText(text, s.widths.Command))
+	return s.CommandStyle().Render(NormalizeAndFitText(text, s.widths.Command))
 }
 
 func (s *Style) RenderContent(text string) string {
-	return s.ContentStyle().Render(wrapText(text, s.widths.Content))
+	return s.ContentStyle().Render(NormalizeAndFitText(text, s.widths.Content))
 }
 
 func (s *Style) RenderDescription(text string) string {
-	return s.DescriptionStyle().Render(wrapText(text, s.widths.Description))
+	return s.DescriptionStyle().Render(NormalizeAndFitText(text, s.widths.Description))
 }
 
 func wrapText(text string, width int) string {
@@ -152,15 +152,13 @@ func wrapLine(line string, width int) []string {
 		return []string{""}
 	}
 
-	var (
-		currentWidth int
-		builder      strings.Builder
-		result       []string
-	)
+	var result []string
+	var builder strings.Builder
+	currentWidth := 0
 
 	for _, r := range line {
 		runeWidth := runewidth.RuneWidth(r)
-		if currentWidth+runeWidth > width && currentWidth > 0 {
+		if builder.Len() > 0 && currentWidth+runeWidth > width {
 			result = append(result, builder.String())
 			builder.Reset()
 			currentWidth = 0
@@ -168,12 +166,6 @@ func wrapLine(line string, width int) []string {
 
 		builder.WriteRune(r)
 		currentWidth += runeWidth
-
-		if currentWidth >= width {
-			result = append(result, builder.String())
-			builder.Reset()
-			currentWidth = 0
-		}
 	}
 
 	if builder.Len() > 0 || len(result) == 0 {
@@ -189,4 +181,10 @@ func padLine(line string, width int) string {
 		return line
 	}
 	return line + strings.Repeat(" ", width-lineWidth)
+}
+
+// NormalizeAndFitText normalizes whitespace and wraps text to fit within the specified width.
+// It preserves multi-line content by wrapping within the column rather than truncating.
+func NormalizeAndFitText(text string, width int) string {
+	return wrapText(text, width)
 }
