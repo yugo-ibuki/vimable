@@ -122,32 +122,16 @@ func (s *Style) DescriptionStyle() lipgloss.Style {
 // If text is longer than width, it will be truncated with "..." at the end
 // This function considers the display width (full-width characters count as 2)
 func TruncateText(text string, width int) string {
-	// 改行、タブ、連続する空白を単一のスペースに置き換える
-	text = strings.ReplaceAll(text, "\n", " ")
-	text = strings.ReplaceAll(text, "\t", " ")
+	// Normalize whitespace by replacing newlines, tabs, and multiple spaces with a single space.
 	text = strings.Join(strings.Fields(text), " ")
-	
-	// パディングを考慮して実際の利用可能幅を計算（左右1文字ずつのパディング）
+
+	// Calculate available width considering 1-char padding on each side.
 	availableWidth := width - 2
-	if availableWidth <= 0 {
-		return text
+	if availableWidth < 0 {
+		availableWidth = 0
 	}
-	
-	// 表示幅を計算（全角文字は2、半角文字は1としてカウント）
-	textWidth := runewidth.StringWidth(text)
-	if textWidth <= availableWidth {
-		return text
-	}
-	
-	// "..."の表示幅（3文字）を確保
-	if availableWidth <= 3 {
-		return "..."
-	}
-	
-	// 利用可能な幅から"..."の分を引く
-	targetWidth := availableWidth - 3
-	
-	// 表示幅に基づいてテキストを切り詰める
-	truncated := runewidth.Truncate(text, targetWidth, "")
-	return truncated + "..."
+
+	// Truncate the text and add an ellipsis if it's too long.
+	// runewidth.Truncate handles cases where the text fits and does not need truncation.
+	return runewidth.Truncate(text, availableWidth, "...")
 }
