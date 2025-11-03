@@ -10,6 +10,18 @@ import (
 	"github.com/yugo-ibuki/vimable/pkg"
 )
 
+// テーブル名の短縮コードマッピング
+var tableShortCodes = map[string]string{
+	"n": "ノーマルモード",
+	"v": "ビジュアルブロックモード",
+	"c": "コマンドモード",
+	"f": "ファイル一覧",
+	"l": "LSP補完",
+	"s": "vim-surround",
+	"b": "ブックマーク(マーク)",
+	"m": "ブックマーク(マーク)", // 別名として「m」も追加
+}
+
 // フラグ変数
 var (
 	tableFlag string
@@ -24,7 +36,9 @@ var rootCmd = &cobra.Command{
 使用例:
   vimable                    - すべてのコマンドテーブルを表示
   vimable -t "ノーマルモード"  - 指定したテーブルのみを表示
-  vimable -l                 - 利用可能なテーブル一覧を表示
+  vimable -t "n"             - 短縮コードでテーブルを指定（n=ノーマルモード）
+  vimable -t "n,s"           - 複数のテーブルを短縮コードで指定
+  vimable -l                 - 利用可能なテーブル一覧と短縮コードを表示
   vimable -h                 - ヘルプを表示`,
 
 	Example: `  # すべてのコマンドを表示
@@ -32,8 +46,11 @@ var rootCmd = &cobra.Command{
 
   # ノーマルモードとvim-surroundのコマンドのみを表示
   vimable -t "ノーマルモード,vim-surround"
+  
+  # 短縮コードを使用して同じ表示をする
+  vimable -t "n,s"
 
-  # 利用可能なテーブル一覧を表示
+  # 利用可能なテーブル一覧と短縮コードを表示
   vimable -l`,
 	Run: func(cmd *cobra.Command, args []string) {
 		run()
@@ -42,8 +59,16 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	// フラグの追加
-	rootCmd.Flags().StringVarP(&tableFlag, "table", "t", "", "表示するテーブルを指定します（カンマ区切りで複数指定可能）")
-	rootCmd.Flags().BoolVarP(&listFlag, "list", "l", false, "利用可能なテーブル一覧を表示します")
+	rootCmd.Flags().StringVarP(&tableFlag, "table", "t", "", "表示するテーブルを指定します（カンマ区切りで複数指定可能、短縮コード使用可）")
+	rootCmd.Flags().BoolVarP(&listFlag, "list", "l", false, "利用可能なテーブル一覧と短縮コードを表示します")
+}
+
+// 短縮コードをテーブル名に変換する
+func expandTableCode(code string) string {
+	if fullName, ok := tableShortCodes[code]; ok {
+		return fullName
+	}
+	return code // 短縮コードが見つからない場合は元のコードを返す
 }
 
 func Execute() {
@@ -57,8 +82,20 @@ func run() {
 	// 利用可能なテーブル一覧を表示する
 	if listFlag {
 		fmt.Println("利用可能なテーブル一覧:")
+		
+		// 短縮コードの逆引きマップを作成（テーブル名から短縮コードを取得するため）
+		reverseMap := make(map[string][]string)
+		for code, name := range tableShortCodes {
+			reverseMap[name] = append(reverseMap[name], code)
+		}
+		
 		for key := range data {
-			fmt.Printf("- %s\n", key)
+			if codes, ok := reverseMap[key]; ok && len(codes) > 0 {
+				// 短縮コードがある場合は表示
+				fmt.Printf("- %s (短縮コード: %s)\n", key, strings.Join(codes, ", "))
+			} else {
+				fmt.Printf("- %s\n", key)
+			}
 		}
 		os.Exit(0)
 	}
@@ -70,10 +107,18 @@ func run() {
 		tables := strings.Split(tableFlag, ",")
 		for _, table := range tables {
 			table = strings.TrimSpace(table)
-			if datums, ok := data[table]; ok {
-				filteredData[table] = datums
+			// 短縮コードをテーブル名に変換
+			expandedTable := expandTableCode(table)
+			
+			if datums, ok := data[expandedTable]; ok {
+				filteredData[expandedTable] = datums
 			} else {
-				fmt.Printf("警告: テーブル '%s' は存在しません。\n", table)
+				// 短縮コードが変換されている場合は両方の名前を表示
+				if expandedTable != table {
+					fmt.Printf("警告: テーブル '%s'(%s) は存在しません。\n", table, expandedTable)
+				} else {
+					fmt.Printf("警告: テーブル '%s' は存在しません。\n", table)
+				}
 			}
 		}
 		// フィルタリングした結果が空の場合
