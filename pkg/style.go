@@ -119,15 +119,15 @@ func (s *Style) DescriptionStyle() lipgloss.Style {
 }
 
 func (s *Style) RenderCommand(text string) string {
-	return s.CommandStyle().Render(wrapText(text, s.widths.Command))
+	return s.CommandStyle().Render(NormalizeAndFitText(text, s.widths.Command))
 }
 
 func (s *Style) RenderContent(text string) string {
-	return s.ContentStyle().Render(wrapText(text, s.widths.Content))
+	return s.ContentStyle().Render(NormalizeAndFitText(text, s.widths.Content))
 }
 
 func (s *Style) RenderDescription(text string) string {
-	return s.DescriptionStyle().Render(wrapText(text, s.widths.Description))
+	return s.DescriptionStyle().Render(NormalizeAndFitText(text, s.widths.Description))
 }
 
 func wrapText(text string, width int) string {
@@ -197,18 +197,8 @@ func padLine(line string, width int) string {
 	return line + strings.Repeat(" ", width-lineWidth)
 }
 
-// NormalizeAndFitText normalizes whitespace in text and fits it within the specified width
-// without adding ellipsis. Text is truncated if it exceeds the width.
+// NormalizeAndFitText normalizes whitespace and wraps text to fit within the specified width.
+// It preserves multi-line content by wrapping within the column rather than truncating.
 func NormalizeAndFitText(text string, width int) string {
-	// Normalize whitespace by replacing newlines, tabs, and multiple spaces with a single space.
-	text = strings.Join(strings.Fields(text), " ")
-
-	// Calculate available width considering 1-char padding on each side.
-	availableWidth := width - 2
-	if availableWidth < 0 {
-		availableWidth = 0
-	}
-
-	// Truncate the text to fit within available width (no ellipsis).
-	return runewidth.Truncate(text, availableWidth, "")
+	return wrapText(text, width)
 }
