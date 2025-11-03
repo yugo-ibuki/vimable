@@ -82,13 +82,13 @@ func run() {
 	// 利用可能なテーブル一覧を表示する
 	if listFlag {
 		fmt.Println("利用可能なテーブル一覧:")
-		
+
 		// 短縮コードの逆引きマップを作成（テーブル名から短縮コードを取得するため）
 		reverseMap := make(map[string][]string)
 		for code, name := range tableShortCodes {
 			reverseMap[name] = append(reverseMap[name], code)
 		}
-		
+
 		for key := range data {
 			if codes, ok := reverseMap[key]; ok && len(codes) > 0 {
 				// 短縮コードがある場合は表示
@@ -109,7 +109,7 @@ func run() {
 			table = strings.TrimSpace(table)
 			// 短縮コードをテーブル名に変換
 			expandedTable := expandTableCode(table)
-			
+
 			if datums, ok := data[expandedTable]; ok {
 				filteredData[expandedTable] = datums
 			} else {
@@ -143,28 +143,28 @@ func run() {
 			fmt.Print("\n") // 最小限の改行
 		}
 		isFirst = false
-		
+
 		style.SetTitle(key) // タイトルを設定
 		fmt.Print(style.ModeStyle().Render(key))
 		fmt.Print("\n")
 
 		// display header
 		headerCells := []string{
-			style.CommandStyle().Render(header[0]),
-			style.ContentStyle().Render(header[1]),
-			style.DescriptionStyle().Render(header[2]),
+			style.RenderCommand(header[0]),
+			style.RenderContent(header[1]),
+			style.RenderDescription(header[2]),
 		}
-		fmt.Print(lipgloss.JoinHorizontal(lipgloss.Left, headerCells...))
+		fmt.Print(lipgloss.JoinHorizontal(lipgloss.Top, headerCells...))
 		fmt.Print("\n")
 
 		// display data
 		for _, datum := range datums {
 			row := []string{
-				style.CommandStyle().Render(datum.Command),
-				style.ContentStyle().Render(datum.Content),
-				style.DescriptionStyle().Render(datum.Description),
+				style.RenderCommand(datum.Command),
+				style.RenderContent(datum.Content),
+				style.RenderDescription(datum.Description),
 			}
-			fmt.Print(lipgloss.JoinHorizontal(lipgloss.Left, row...))
+			fmt.Print(lipgloss.JoinHorizontal(lipgloss.Top, row...))
 			fmt.Print("\n")
 		}
 	}
