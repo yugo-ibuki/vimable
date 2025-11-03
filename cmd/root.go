@@ -150,9 +150,9 @@ func run() {
 
 		// display header
 		headerCells := []string{
-			style.CommandStyle().Render(header[0]),
-			style.ContentStyle().Render(header[1]),
-			style.DescriptionStyle().Render(header[2]),
+			style.CommandStyle().Render(pkg.TruncateText(header[0], columnWidths.Command)),
+			style.ContentStyle().Render(pkg.TruncateText(header[1], columnWidths.Content)),
+			style.DescriptionStyle().Render(pkg.TruncateText(header[2], columnWidths.Description)),
 		}
 		fmt.Print(lipgloss.JoinHorizontal(lipgloss.Left, headerCells...))
 		fmt.Print("\n")
@@ -160,9 +160,9 @@ func run() {
 		// display data
 		for _, datum := range datums {
 			row := []string{
-				style.CommandStyle().Render(datum.Command),
-				style.ContentStyle().Render(datum.Content),
-				style.DescriptionStyle().Render(datum.Description),
+				style.CommandStyle().Render(pkg.TruncateText(datum.Command, columnWidths.Command)),
+				style.ContentStyle().Render(pkg.TruncateText(datum.Content, columnWidths.Content)),
+				style.DescriptionStyle().Render(pkg.TruncateText(datum.Description, columnWidths.Description)),
 			}
 			fmt.Print(lipgloss.JoinHorizontal(lipgloss.Left, row...))
 			fmt.Print("\n")
