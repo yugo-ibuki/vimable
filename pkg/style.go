@@ -118,10 +118,9 @@ func (s *Style) DescriptionStyle() lipgloss.Style {
 		PaddingRight(1)
 }
 
-// TruncateText truncates text to fit within the specified width
-// If text is longer than width, it will be truncated with "..." at the end
-// This function considers the display width (full-width characters count as 2)
-func TruncateText(text string, width int) string {
+// NormalizeAndFitText normalizes whitespace in text and fits it within the specified width
+// without adding ellipsis. Text is truncated if it exceeds the width.
+func NormalizeAndFitText(text string, width int) string {
 	// Normalize whitespace by replacing newlines, tabs, and multiple spaces with a single space.
 	text = strings.Join(strings.Fields(text), " ")
 
@@ -131,7 +130,6 @@ func TruncateText(text string, width int) string {
 		availableWidth = 0
 	}
 
-	// Truncate the text and add an ellipsis if it's too long.
-	// runewidth.Truncate handles cases where the text fits and does not need truncation.
-	return runewidth.Truncate(text, availableWidth, "...")
+	// Truncate the text to fit within available width (no ellipsis).
+	return runewidth.Truncate(text, availableWidth, "")
 }
