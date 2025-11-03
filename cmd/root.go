@@ -159,13 +159,51 @@ func run() {
 
 		// display data
 		for _, datum := range datums {
-			row := []string{
-				style.CommandStyle().Render(datum.Command),
-				style.ContentStyle().Render(datum.Content),
-				style.DescriptionStyle().Render(datum.Description),
+			// Render each cell (which may return multiple lines)
+			commandLines := style.RenderCommandCell(datum.Command)
+			contentLines := style.RenderContentCell(datum.Content)
+			descriptionLines := style.RenderDescriptionCell(datum.Description)
+
+			// Find the maximum number of lines needed
+			maxLines := len(commandLines)
+			if len(contentLines) > maxLines {
+				maxLines = len(contentLines)
 			}
-			fmt.Print(lipgloss.JoinHorizontal(lipgloss.Left, row...))
-			fmt.Print("\n")
+			if len(descriptionLines) > maxLines {
+				maxLines = len(descriptionLines)
+			}
+
+			// Render each line of the row
+			for i := 0; i < maxLines; i++ {
+				var row []string
+
+				// Get the line for each column, or use empty string if no more lines
+				cmdLine := ""
+				if i < len(commandLines) {
+					cmdLine = commandLines[i]
+				} else {
+					// Fill empty line with same width but empty content
+					cmdLine = style.CommandStyle().Render("")
+				}
+
+				contentLine := ""
+				if i < len(contentLines) {
+					contentLine = contentLines[i]
+				} else {
+					contentLine = style.ContentStyle().Render("")
+				}
+
+				descLine := ""
+				if i < len(descriptionLines) {
+					descLine = descriptionLines[i]
+				} else {
+					descLine = style.DescriptionStyle().Render("")
+				}
+
+				row = []string{cmdLine, contentLine, descLine}
+				fmt.Print(lipgloss.JoinHorizontal(lipgloss.Left, row...))
+				fmt.Print("\n")
+			}
 		}
 	}
 
