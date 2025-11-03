@@ -88,5 +88,5 @@ func Commands() Data {
 }
 
 func Header() []string {
-	return []string{"Title", "Command", "Description"}
+	return []string{"Command", "Content", "Description"}
 }
