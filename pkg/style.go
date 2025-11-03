@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
+	"github.com/mattn/go-runewidth"
 )
 
 const (
@@ -92,6 +93,7 @@ func (s *Style) CommandStyle() lipgloss.Style {
 		Background(ContentBg).
 		Bold(true).
 		Width(s.widths.Command).
+		MaxWidth(s.widths.Command).
 		PaddingLeft(1).
 		PaddingRight(1)
 }
@@ -101,6 +103,7 @@ func (s *Style) ContentStyle() lipgloss.Style {
 		Foreground(TextColor).
 		Background(ContentBg).
 		Width(s.widths.Content).
+		MaxWidth(s.widths.Content).
 		PaddingLeft(1).
 		PaddingRight(1)
 }
@@ -110,6 +113,23 @@ func (s *Style) DescriptionStyle() lipgloss.Style {
 		Foreground(TextColor).
 		Background(ContentBg).
 		Width(s.widths.Description).
+		MaxWidth(s.widths.Description).
 		PaddingLeft(1).
 		PaddingRight(1)
+}
+
+// NormalizeAndFitText normalizes whitespace in text and fits it within the specified width
+// without adding ellipsis. Text is truncated if it exceeds the width.
+func NormalizeAndFitText(text string, width int) string {
+	// Normalize whitespace by replacing newlines, tabs, and multiple spaces with a single space.
+	text = strings.Join(strings.Fields(text), " ")
+
+	// Calculate available width considering 1-char padding on each side.
+	availableWidth := width - 2
+	if availableWidth < 0 {
+		availableWidth = 0
+	}
+
+	// Truncate the text to fit within available width (no ellipsis).
+	return runewidth.Truncate(text, availableWidth, "")
 }
