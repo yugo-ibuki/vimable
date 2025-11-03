@@ -65,23 +65,27 @@ func (t *Table) Width(header []string, data Data) ColumnWidths {
 	reductionOrder := []int{2, 1, 0} // prioritize shrinking description/content first
 
 	if total > limit {
+		// Phase 1: reduce down to minimum limits
 		for total > limit {
-			adjusted := false
+			reduced := false
 			for _, idx := range reductionOrder {
-				minAllowed := minLimits[idx]
-				if total > limit && widths[idx] > minAllowed {
-					widths[idx]--
-					total--
-					adjusted = true
-				}
 				if total <= limit {
 					break
 				}
+				if widths[idx] > minLimits[idx] {
+					widths[idx]--
+					total--
+					reduced = true
+				}
 			}
-			if adjusted {
-				continue
+			if !reduced {
+				break
 			}
+		}
 
+		// Phase 2: reduce further if still exceeding limit
+		for total > limit {
+			reduced := false
 			for _, idx := range reductionOrder {
 				if total <= limit {
 					break
@@ -89,10 +93,10 @@ func (t *Table) Width(header []string, data Data) ColumnWidths {
 				if widths[idx] > 1 {
 					widths[idx]--
 					total--
-					adjusted = true
+					reduced = true
 				}
 			}
-			if !adjusted {
+			if !reduced {
 				break
 			}
 		}
