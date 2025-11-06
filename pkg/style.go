@@ -15,7 +15,7 @@ const (
 	Yellow    = lipgloss.Color("#e0af68")
 	Gray      = lipgloss.Color("#7f849c")
 	TextColor = lipgloss.Color("#c8ccd4")
-	
+
 	// 背景色
 	PluginBg  = lipgloss.Color("#2c1f1a") // オレンジに合う暗めの背景
 	ModeBg    = lipgloss.Color("#2a2522") // 黄色に合う暗めの背景
@@ -118,18 +118,87 @@ func (s *Style) DescriptionStyle() lipgloss.Style {
 		PaddingRight(1)
 }
 
-// NormalizeAndFitText normalizes whitespace in text and fits it within the specified width
-// without adding ellipsis. Text is truncated if it exceeds the width.
-func NormalizeAndFitText(text string, width int) string {
-	// Normalize whitespace by replacing newlines, tabs, and multiple spaces with a single space.
-	text = strings.Join(strings.Fields(text), " ")
+func (s *Style) RenderCommand(text string) string {
+	return s.CommandStyle().Render(NormalizeAndFitText(text, s.widths.Command))
+}
 
-	// Calculate available width considering 1-char padding on each side.
-	availableWidth := width - 2
-	if availableWidth < 0 {
-		availableWidth = 0
+func (s *Style) RenderContent(text string) string {
+	return s.ContentStyle().Render(NormalizeAndFitText(text, s.widths.Content))
+}
+
+func (s *Style) RenderDescription(text string) string {
+	return s.DescriptionStyle().Render(NormalizeAndFitText(text, s.widths.Description))
+}
+
+func wrapText(text string, width int) string {
+	if width <= 0 {
+		return text
 	}
 
-	// Truncate the text to fit within available width (no ellipsis).
-	return runewidth.Truncate(text, availableWidth, "")
+	text = strings.ReplaceAll(text, "\t", "    ")
+
+	segments := strings.Split(text, "\n")
+	var lines []string
+	for _, segment := range segments {
+		wrappedLines := wrapLine(segment, width)
+		for _, line := range wrappedLines {
+			lines = append(lines, padLine(line, width))
+		}
+	}
+
+	return strings.Join(lines, "\n")
+}
+
+func wrapLine(line string, width int) []string {
+	if width <= 0 {
+		return []string{line}
+	}
+
+	if line == "" {
+		return []string{""}
+	}
+
+	var (
+		currentWidth int
+		builder      strings.Builder
+		result       []string
+	)
+
+	for _, r := range line {
+		runeWidth := runewidth.RuneWidth(r)
+		if currentWidth+runeWidth > width && currentWidth > 0 {
+			result = append(result, builder.String())
+			builder.Reset()
+			currentWidth = 0
+		}
+
+		builder.WriteRune(r)
+		currentWidth += runeWidth
+
+		if currentWidth >= width {
+			result = append(result, builder.String())
+			builder.Reset()
+			currentWidth = 0
+		}
+	}
+
+	if builder.Len() > 0 || len(result) == 0 {
+		result = append(result, builder.String())
+	}
+
+	return result
+}
+
+func padLine(line string, width int) string {
+	lineWidth := runewidth.StringWidth(line)
+	if lineWidth >= width {
+		return line
+	}
+	return line + strings.Repeat(" ", width-lineWidth)
+}
+
+// NormalizeAndFitText normalizes whitespace and wraps text to fit within the specified width.
+// It preserves multi-line content by wrapping within the column rather than truncating.
+func NormalizeAndFitText(text string, width int) string {
+	return wrapText(text, width)
 }
